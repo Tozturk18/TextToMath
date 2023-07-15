@@ -301,12 +301,3 @@ float textCalc(char *str) {
     
     return evaluateExpression(str, &index);
 }
-
-/*int main() {
-    char expression[] = "2.45 * 2";
-    int index = 0;
-    float solution = textCalc(expression);
-    printf("Solution: %.2f\n", solution);
-
-    return 0;
-}*/
