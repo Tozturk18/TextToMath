@@ -88,7 +88,7 @@ static float getNumber(char *str, int *index) {
 static float evaluateFactor(char *str, int *index) {
 
     // Check if there is an opening paranthesis
-    if (str[*index] == '(') {
+    if (str[*index] == '(' || str[*index] == '[' || str[*index] == '{') {
         (*index)++;                                     // Skip the opening paranthesis
         float result = evaluateExpression(str, index);  // Get the expressions in the paranthesis
         (*index)++;                                     // Skip the closing parenthesis
@@ -114,35 +114,43 @@ static float evaluateFactor(char *str, int *index) {
     float expression = 0.00;
 
     // Check for "sqrt("
-    if (temp[0] == 's' && temp[1] == 'q' && temp[2] == 'r' && temp[3] == 't' && temp[4] == '(') {
-        *index += 5;                                    // Move the index past "sqrt("
-        expression = evaluateExpression(str, index);    // Resolve the expressions inside the square root
-        (*index)++;                                     // Skip the closing parenthesis
-        return sqrt(expression);
+    if (temp[0] == 's' && temp[1] == 'q' && temp[2] == 'r' && temp[3] == 't') {
+        if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
+            *index += 5;                                    // Move the index past "sqrt("
+            expression = evaluateExpression(str, index);    // Resolve the expressions inside the square root
+            (*index)++;                                     // Skip the closing parenthesis
+            return sqrt(expression);
+        }
     }
 
     // Check for "round("
-    if (temp[0] == 'r' && temp[1] == 'o' && temp[2] == 'u' && temp[3] == 'n' && temp[4] == 'd' && temp[5] == '(') {
-        *index += 6;                                    // Move the index past "round("
-        expression = evaluateExpression(str, index);    // Resolve the expressions inside the rounding
-        (*index)++;                                     // Skip the closing parenthesis
-        return round(expression);
+    if (temp[0] == 'r' && temp[1] == 'o' && temp[2] == 'u' && temp[3] == 'n' && temp[4] == 'd') {
+        if (temp[5] == '(' || temp[5] == '[' || temp[5] == '{') {
+            *index += 6;                                    // Move the index past "round("
+            expression = evaluateExpression(str, index);    // Resolve the expressions inside the rounding
+            (*index)++;                                     // Skip the closing parenthesis
+            return round(expression);
+        }
     }
 
     // Check for "floor("
-    if (temp[0] == 'f' && temp[1] == 'l' && temp[2] == 'o' && temp[3] == 'o' && temp[4] == 'r' && temp[5] == '(') {
-        *index += 6;                                    // Move the index past "floor("
-        expression = evaluateExpression(str, index);    // Resolve the expressions inside the flooring
-        (*index)++;                                     // Skip the closing parenthesis
-        return floor(expression);
+    if (temp[0] == 'f' && temp[1] == 'l' && temp[2] == 'o' && temp[3] == 'o' && temp[4] == 'r') {
+        if (temp[5] == '(' || temp[5] == '[' || temp[5] == '{') {
+            *index += 6;                                    // Move the index past "floor("
+            expression = evaluateExpression(str, index);    // Resolve the expressions inside the flooring
+            (*index)++;                                     // Skip the closing parenthesis
+            return floor(expression);
+        }
     }
 
     // Check for "ceil("
-    if (temp[0] == 'c' && temp[1] == 'e' && temp[2] == 'i' && temp[3] == 'l' && temp[4] == '(') {
-        *index += 5;                                    // Move the index past "ceil("
-        expression = evaluateExpression(str, index);    // Resolve the expressions inside the ceiling
-        (*index)++;                                     // Skip the closing parenthesis
-        return ceil(expression);
+    if (temp[0] == 'c' && temp[1] == 'e' && temp[2] == 'i' && temp[3] == 'l') {
+        if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
+            *index += 5;                                    // Move the index past "ceil("
+            expression = evaluateExpression(str, index);    // Resolve the expressions inside the ceiling
+            (*index)++;                                     // Skip the closing parenthesis
+            return ceil(expression);
+        }
     }
 
     // If none of these, then it must be a number
