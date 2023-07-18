@@ -176,7 +176,7 @@ static float evaluatePower(char *str, int *index) {
     float result = evaluateFactor(str, index);          // Get the initial expression
 
     // Correctly square a negative number
-    if (str[*index-1] == ')' && str[*index] == '^') {
+    if ((str[*index-1] == ')' || str[*index-1] == ']' || str[*index-1] == '}') && str[*index] == '^') {
         (*index)++;                                     // Skip the exponent sign
 
         float nextFactor = evaluateFactor(str, index);  // Get the next expression
@@ -213,14 +213,14 @@ static float evaluateTerm(char *str, int *index) {
     float result = evaluatePower(str, index);           // Get the initial expression
 
     // Check for multiplication, division, or modulus sign
-    if (str[*index] == '*' || str[*index] == '/' || str[*index] == '%') {
+    if (str[*index] == '*' || str[*index] == '/' || str[*index] == '%' || str[*index] == '_') {
         char operator = str[*index];                    // Load the operator
         (*index)++;                                     // Skip the operator
 
         float nextFactor = evaluatePower(str, index);   // Get the second expression
 
         // Resolve the opperation
-        if (operator == '*') {
+        if (operator == '*' || operator == '_') {
             result *= nextFactor;
         } else if (operator == '/') {
             result /= nextFactor;
@@ -281,19 +281,23 @@ static float evaluateExpression(char *str, int *index) {
  * - void
  */
 static void removeSpace(char* str) {
-    char* i = str;
+    char* i = str;                                  // Get a pointer, pointing at the input string
+
+    // Itterate through each character on the string
     do {
-        while (*i == ' ') {
-            ++i;
+        while ( isspace(*i) ) {
+            ++i;                                    // Skip the character whenever there is a space.
         }
-    } while (*str++ = *i++);
+    } while ((*str++ = *i++) != '\0');
 }
 
 /* --- textCalc() function ---
  * This function is a placer function that helps clean up the input string by calling
  * the removeSpace function, sets a starting index and triggers the recursion loop in
  * evaluateExpression() function and returns the float value which is the result of the
- * mathematical expression inputed into the evaluateExpression.
+ * mathematical expression inputed into the evaluateExpression. This functions also
+ * ensures that the all of the input string is parsed through the evaluateExpression()
+ * function.
  * 
  * Parameters:
  *  - char *str: This is a string that contains mathematical expressions.
@@ -303,9 +307,42 @@ static void removeSpace(char* str) {
  *      the mathematical expression inputed by the user.
  */
 float textCalc(char *str) {
-    int index = 0;
+    int index;                                      // Output index
+    int i = 0;                                      // Current index
     
-    removeSpace(str);
+    removeSpace(str);                               // Remove whitespace from the string
+
+    float val = 0.00;                               // Output value
+    char buf[100];                                  // Buffer variable
     
-    return evaluateExpression(str, &index);
+    char temp[strlen(str)+1];                       // Temporary varaible
+    strcpy(temp,str);                               // Copy input string into the temporary variable
+    
+    char tempBuf[100];                              // Temporary Buffer Variable
+
+    // Iterate through each repetation
+    while ((int)strlen(str) > i) {
+        index = 0;                                  // Reset the index
+        
+        val = evaluateExpression(temp, &index);     // get the output value and pass the index bny reference
+        
+        gcvt(val,6,buf);                            // Store the output value as a string in the buffer
+
+        // Make sure the order is correct
+        if (i>0) {
+            i += index - (int)strlen(tempBuf);      // Decrease the output index by the number of digits of the previous itteration value
+        } else {
+            i += index;
+        }
+        
+
+        char *truncatedTemp = temp + index;         // Truncate the temp variable to get rid of the part that is already calculated
+        
+        strcat(buf, truncatedTemp);                 // Combine the buffer and the truncatedTemp and store it in the buffer
+        strcpy(temp,buf);                           // Copy the buffer into the temp variable.
+        
+        gcvt(val,6,tempBuf);                        // Update the temporary buffer
+    }
+
+    return val;                                     // Return the final value
 }
