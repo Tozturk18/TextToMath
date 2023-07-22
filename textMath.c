@@ -62,10 +62,10 @@ static float getNumber(char *str, int *index) {
     }
 
     // Fail Safe
-    if (!isdigit(temp[i]) && temp[i] != '^' && temp[i] != '*' && temp[i] != '/' && temp[i] != '%' && temp[i] != '+' && temp[i] != '-' && temp[i] != ')' && temp[i] != '\0'  ) {
+    if (!isdigit(temp[i]) && temp[i] != '^' && temp[i] != '*' && temp[i] != '_' && temp[i] != '/' && temp[i] != '%' && temp[i] != '+' && temp[i] != '-' && temp[i] != ')' && temp[i] != '}' && temp[i] != ']' && temp[i] != '\0'  ) {
 
         // Skip the Unrecognized Characters 
-        while (!isdigit(temp[i]) && temp[i] != '^' && temp[i] != '*' && temp[i] != '/' && temp[i] != '%' && temp[i] != '+' && temp[i] != '-' && temp[i] != ')' && temp[i] != '\0' ) {
+        while (!isdigit(temp[i]) && temp[i] != '^' && temp[i] != '*' && temp[i] != '_' && temp[i] != '/' && temp[i] != '%' && temp[i] != '+' && temp[i] != '-' && temp[i] != ')' && temp[i] != '}' && temp[i] != ']' && temp[i] != '\0' ) {
             i++;
         }
 
