@@ -5,7 +5,7 @@ LDFLAGS = -lm
 TARGET = example
 SRCS = example.c
 LIBS = ../textMath.c
-OBJS = $(SRCS:.c=.o)
+OBJS = $(SRCS:.c)
 
 ifeq ($(shell uname),Darwin)
 	LDFLAGS += -Wl,-no_compact_unwind

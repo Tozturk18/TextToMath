@@ -1,6 +1,6 @@
 /* textMath.c 
  * Created by Ozgur Tuna Ozturk and ChatGPT on July 14, 2023.
- * Last updated on July 15, 2023.
+ * Last updated on July 18, 2023.
  * 
  * This file contains the code for parsing a string into float variables,
  * and then interpret the mathematical expressions to calculate the final desired result.
@@ -28,8 +28,6 @@
 #include <ctype.h>
 #include "textMath.h"
 /* --- End of Imports --- */
-
-//float evaluateExpression(char *str, int *index);
 
 /* --- getNumber() Function ---
  * This function parses the input string starting from a certain
@@ -61,6 +59,20 @@ static float getNumber(char *str, int *index) {
     // Count the number of digits in the number to parse
     while (isdigit(temp[i]) || temp[i] == '.' || (temp[i] == '-' && number < 0) ) {
         i++;
+    }
+
+    // Fail Safe
+    if (!isdigit(temp[i]) && temp[i] != '^' && temp[i] != '*' && temp[i] != '/' && temp[i] != '%' && temp[i] != '+' && temp[i] != '-' && temp[i] != ')' && temp[i] != '\0'  ) {
+
+        while (!isdigit(temp[i]) && temp[i] != '^' && temp[i] != '*' && temp[i] != '/' && temp[i] != '%' && temp[i] != '+' && temp[i] != '-' && temp[i] != ')' && temp[i] != '\0' ) {
+            i++;
+        }
+
+        // Reset number
+        number = 0.0f;
+
+        // Error message
+        printf("\nUnkown expressions detected in the input. Please check your input and make sure it is correct\n");
     }
     
     (*index) += i;              // Update the index accordingly
@@ -307,6 +319,7 @@ static void removeSpace(char* str) {
  *      the mathematical expression inputed by the user.
  */
 float textCalc(char *str) {
+
     int index;                                      // Output index
     int i = 0;                                      // Current index
     
@@ -328,11 +341,11 @@ float textCalc(char *str) {
         
         gcvt(val,6,buf);                            // Store the output value as a string in the buffer
 
-        // Make sure the order is correct
+        // Update the current index accordingly
         if (i>0) {
             i += index - (int)strlen(tempBuf);      // Decrease the output index by the number of digits of the previous itteration value
         } else {
-            i += index;
+            i += index;                             
         }
         
 
