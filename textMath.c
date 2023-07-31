@@ -12,6 +12,10 @@
  *  - round(): This rounds the values inside the paranthesis to the nearest integer
  *  - floor(): This floors the values inside the paranthesis to the nearest higher integer
  *  - ceil(): This floors the values inside the paranthesis to the nearest lower integer
+ *  - sin(): This takes the sine of values inside the paranthesis
+ *  - cos(): This takes the cosine of values inside the paranthesis
+ *  - tan(): This takes the tangent of values inside the paranthesis
+ *  - cot(): This takes the cotangent of values inside the paranthesis
  * (Support for more functionalities will come soon).
  * 
  * This program also supports some pre-defined mathematical constants:
