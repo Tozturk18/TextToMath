@@ -47,25 +47,37 @@ The mathematical expressions are very similar to the ones used by Google Search 
 9. Cotangent:
     - To find the cotangent of an angle you can use the ```cot( (15*2)deg )``` mathematical trig function and in this example the result should be ```1.73```
 
-7. Multiplication:
+10. Arcsine:
+    - To find the inverse sine of an angle you can use the ```asin(0.9)``` mathematical trig function and in this example the result should be ```1.12```
+
+11. Arccosine:
+    - To find the inverse cosine of an angle you can use the ```acos(0.9)``` mathematical trig function and in this example the result should be ```0.45```
+
+12. Arctangent:
+    - To find the inverse tangent of an angle you can use the ```atan(0.9)``` mathematical trig function and in this example the result should be ```0.73```
+
+13. Arccotangent:
+    - To find the inverse sine of an angle you can use the ```acot(0.9)``` mathematical trig function and in this example the result should be ```1.36```
+
+14. Multiplication:
     - To multiply two float values you can use either the star sign '```*```' or the underscore '```_```' sign. For example entering ```"3.25*2.68"``` would result in ```8.71```
 
-8. Division:
+15. Division:
     - To divide two float values you can use the slash '```/```' sign. For example entering ```"3/2"``` would result in ```1.5```
 
-9. Modulus:
+16. Modulus:
     - To find the modulus of two float values you can use the mod '```%```' sign. For example entering ```"3%2"``` would result in ```1.00```
 
-10. Addition:
+17. Addition:
     - To add two float values you can use the plus '```+```' sign. For example entering ```"3+2"``` would result in ```5.0```
 
-11. Substraction:
+18. Substraction:
     - To substract two float values you can use the minus '```-```' sign. For example entering ```"3-2"``` would result in ```1.00```
 
-12. PI (π):
+19. PI (π):
     - To input PI (π) into your mathematical expression you can simply type ```"pi"``` or ```"PI``` or ```"Pi"``` or ```"pI"```. For example entering ```"pi^2"``` would result in ```9.87```
 
-13. Euler's Number (e):
+20. Euler's Number (e):
     -   To input the Euler's Number (e) into your mathematical expression you can simply type ```e```. For example entering ```sqrt(2.45*e)``` would result in ```2.58```
 
 Below are some examples on how to use these terms together to create more complex mathematical expressions

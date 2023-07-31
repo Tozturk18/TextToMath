@@ -16,6 +16,10 @@
  *  - cos(): This takes the cosine of values inside the paranthesis
  *  - tan(): This takes the tangent of values inside the paranthesis
  *  - cot(): This takes the cotangent of values inside the paranthesis
+ *  - asin(): This takes the inverse sine of values inside the paranthesis
+ *  - acos(): This takes the inverse cosine of values inside the paranthesis
+ *  - atan(): This takes the inverse tangent of values inside the paranthesis
+ *  - acot(): This takes the inverse cotangent of values inside the paranthesis
  * (Support for more functionalities will come soon).
  * 
  * This program also supports some pre-defined mathematical constants:
@@ -298,6 +302,46 @@ static float evaluateFactor(char *str, int *index) {
             expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
             return (float)1/tanf(expression);
+        }
+    }
+
+    // Check for "asin("
+    if (temp[0] == 'a' && temp[1] == 's' && temp[2] == 'i' && temp[3] == 'n') {
+        if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
+            *index += 5;                                    // Move the index past "ceil("
+            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            (*index)++;                                     // Skip the closing parenthesis
+            return asinf(expression);
+        }
+    }
+
+    // Check for "acos("
+    if (temp[0] == 'a' && temp[1] == 'c' && temp[2] == 'o' && temp[3] == 's') {
+        if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
+            *index += 5;                                    // Move the index past "ceil("
+            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            (*index)++;                                     // Skip the closing parenthesis
+            return acosf(expression);
+        }
+    }
+
+    // Check for "atan("
+    if (temp[0] == 'a' && temp[1] == 't' && temp[2] == 'a' && temp[3] == 'n') {
+        if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
+            *index += 5;                                    // Move the index past "ceil("
+            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            (*index)++;                                     // Skip the closing parenthesis
+            return atanf(expression);
+        }
+    }
+
+    // Check for "acot("
+    if (temp[0] == 'a' && temp[1] == 'c' && temp[2] == 'o' && temp[3] == 't') {
+        if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
+            *index += 5;                                    // Move the index past "ceil("
+            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            (*index)++;                                     // Skip the closing parenthesis
+            return (float)1/atanf(expression);
         }
     }
 
