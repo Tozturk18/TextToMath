@@ -7,3 +7,64 @@ This program does also support mathematical constants and expressions such as pi
 In the example folder there is an example code that you can run to play with it. It will ask you to enter a mathematical equation or an expression and it will solve it for you. Try something hard! If it does not work please contact me so I can fix the bug.
 
 More updates will be coming as needed to fix bugs or add new mathematical functionalities such as complex numbers, calculus, etc...
+
+The library only allows the use of the ```float textCalc(char *str)``` function. All the other functions defined in the header file (textMath.h) are static and only used by the program itself. To use this program calling the ```textCalc()``` function is enough. 
+
+This function takes in a string (a char array) and returns a float number that contains the solution of the mathematical expressions written in the string.
+
+This repository contains an "example" folder where you can find an example.c code file, a Makefile and an executable "example" file. To try out the TextToMath Program you can run the example executable and it will ask you to input a mathematical expression. Then enter your mathematical expression to get the solution.
+
+## Usage
+The mathematical expressions are very similar to the ones used by Google Search and Desmos or Geogebra.
+
+1. parenthesis:
+    - To create a term with parenthesis you can simply use the parenthesis "```(3+2)```", or square brackets "```[3+2]```", or curly brackets "```{3+2}```" sign. In this example the solution would be ```5.00```
+
+2. Exponents:
+    - To create an exponent you can use the caret '```^```' sign. For example entering ```"3^2"``` would result in ```9.00```
+
+3. Square Root:
+    - To create a square root you can either use the exponent sign and do ```"9^(1/2)"``` or you can simply use the mathematical function ```"sqrt(9)"``` which both will result in ```3.00```
+
+4. Rounding:
+    - To round the float value to the nearest integer you can use the ```"round(1.223)"``` mathematical function and in this example the result should be ```1.00```
+
+5. Flooring:
+    - To floor the float value to the nearest lower integer you can use the ```"floor(1.82)"``` mathematical function and in this example the result should be ```1.00```
+
+6. Ceiling:
+    - To ceil the float value to the nearest higher integer you can use the ```"ceil(0.234)"``` mathematical function and in this example the result should be ```1.00```
+
+7. Multiplication:
+    - To multiply two float values you can use either the star sign '```*```' or the underscore '```_```' sign. For example entering ```"3.25*2.68"``` would result in ```8.71```
+
+8. Division:
+    - To divide two float values you can use the slash '```/```' sign. For example entering ```"3/2"``` would result in ```1.5```
+
+9. Modulus:
+    - To find the modulus of two float values you can use the mod '```%```' sign. For example entering ```"3%2"``` would result in ```1.00```
+
+10. Addition:
+    - To add two float values you can use the plus '```+```' sign. For example entering ```"3+2"``` would result in ```5.0```
+
+11. Substraction:
+    - To substract two float values you can use the minus '```-```' sign. For example entering ```"3-2"``` would result in ```1.00```
+
+12. PI (π):
+    - To input PI (π) into your mathematical expression you can simply type ```"pi"``` or ```"PI``` or ```"Pi"``` or ```"pI"```. For example entering ```"pi^2"``` would result in ```9.87```
+
+13. Euler's Number (e):
+    -   To input the Euler's Number (e) into your mathematical expression you can simply type ```e```. For example entering ```sqrt(2.45*e)``` would result in ```2.58```
+
+Below are some examples on how to use these terms together to create more complex mathematical expressions
+
+## Examples
+This program can support different terms for multiplication and pharanthesis to accomodate command-line (terminal) inputs. This is because terms such as "*" or "()" or "$", and more are specific predefined command line arguments. Hence, it gives an error when trying to do multiplication, and else.
+
+This is why the multiplication opperation is supported with the underscore character '_' and the paranthesis are supported by curly brackets "{}" and square brackets "[]".
+
+### Example 1
+
+```
+2.45*e^round(1.36*(10.4+sqrt(8)*pi)/3)
+```

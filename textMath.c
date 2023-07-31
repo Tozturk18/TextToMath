@@ -50,19 +50,24 @@
 static float getNumber(char *str, int *index) {
 
     
-    char *temp = str + *index;  // Create a temp string containing only the unparsed part
+    char *temp = str + *index;                              // Create a temp string containing only the unparsed part
 
-    float number = atof(temp);  // Parse the number as float value
+    float number = atof(temp);                              // Parse the number as float value
 
-    int i = 0;                  // keep track of the number of digits on the number
+    int i = 0;                                              // keep track of the number of digits on the number
 
     // Count the number of digits in the number to parse
     while (isdigit(temp[i]) || temp[i] == '.' || (temp[i] == '-' && number < 0) ) {
         i++;
     }
 
-    // Fail Safe
-    if (!isdigit(temp[i]) && temp[i] != '^' && temp[i] != '*' && temp[i] != '_' && temp[i] != '/' && temp[i] != '%' && temp[i] != '+' && temp[i] != '-' && temp[i] != ')' && temp[i] != '}' && temp[i] != ']' && temp[i] != '\0'  ) {
+    // Radians to degrees (the user simply needs to enter "deg" next to a number)
+    if (temp[i] == 'd' && temp[i+1] == 'e' && temp[i+2] == 'g') {
+
+        number = number * M_PI / 180;                       // Convert angle to radians
+        i += 3;                                             // move index by 3 positions
+    // Fail Safe for wrong input
+    } else if (!isdigit(temp[i]) && temp[i] != '^' && temp[i] != '*' && temp[i] != '_' && temp[i] != '/' && temp[i] != '%' && temp[i] != '+' && temp[i] != '-' && temp[i] != ')' && temp[i] != '}' && temp[i] != ']' && temp[i] != '\0'  ) {
 
         // Skip the Unrecognized Characters 
         while (!isdigit(temp[i]) && temp[i] != '^' && temp[i] != '*' && temp[i] != '_' && temp[i] != '/' && temp[i] != '%' && temp[i] != '+' && temp[i] != '-' && temp[i] != ')' && temp[i] != '}' && temp[i] != ']' && temp[i] != '\0' ) {
@@ -76,10 +81,91 @@ static float getNumber(char *str, int *index) {
         printf("\nUnkown expressions detected in the input. Please check your input and make sure it is correct\n");
     }
     
-    (*index) += i;              // Update the index accordingly
+    (*index) += i;                                          // Update the index accordingly
 
-    return number;              // Return the value found by atof()
+    //printf("\ntemp: %s, number: %.2f, index: %d, i: %d\n", temp, number, *index, i);
+
+    return number;                                          // Return the value found by atof()
 } /* --- End of getNumber() --- */
+
+/* --- phranthesisRepeater() Function ---
+ * This function parses the input to get rid of the paranthesis and solve
+ * the contents of the paranthesis using truncate, solve, and attach procedure.
+ * To solve embedded paranthesis with multiple operations inside, the program needs
+ * to go itterate through all expressions. To achieve a final accurate result, this
+ * function allows for itteration through each expression.
+ * 
+ * Parameters:
+ *  - char *str: This is the string containing the mathematical expression
+ *  - int *index: This is an integer index variable passed by reference.
+ *      index variable keeps track of the current index the program is on.
+ * 
+ * Return:
+ * - number: a float value, containing the parsed value from the string.
+ */
+static float phranthesisRepeater(char *str, int *index) {
+
+    int openParan = 0;                                      // The number of open paranthesis
+
+    // truncated string containing the initial string without the paranthesis
+    char truncatedStr[(int)strlen(str)+1];
+    strcpy(truncatedStr, str + *index);
+
+    // Find the according close paranthesis to the open paranthesis
+    for (int i = 0; i < (int)strlen(truncatedStr); i++)  {
+
+        // Count the number of embedded open paranthesis
+        if (truncatedStr[i] == '(') {
+            openParan++;
+        }
+
+        // Check if the close paranthesis belongs to the truncated open paranthesis
+        if (truncatedStr[i] == ')' && openParan > 0) {
+            openParan--;
+        } else if (truncatedStr[i] == ')' && openParan == 0) {
+            truncatedStr[i] = '\0';
+        }
+    }
+
+    int pos;                                                // Output index position
+    int i = 0;                                              // Current index relative to the original string
+
+    float val = 0.00f;                                      // Output value
+    char buf[100];                                          // Buffer variable
+
+    char temp[strlen(truncatedStr)+1];                      // Temporary variable
+    strcpy(temp,truncatedStr);                              // Copy input string into the temporary variable
+
+    char tempBuf[100];                                      // Temporary buffer variable
+
+    // Iterate through eaach repetation
+    while ((int)strlen(truncatedStr) > i) {
+        pos = 0;                                            // Reset the index
+
+        val = evaluateExpression(temp, &pos);               // Get the output value and pass the index by reference
+
+        gcvt(val,6,buf);                                    // Store the output value as a string in the buffer
+
+        // Update the current index accordingly
+        if (i>0) {
+            i += pos - (int)strlen(tempBuf);
+        } else {
+            i += pos;
+        }
+
+        char *truncatedTemp = temp + pos;                   // Truncate the temp variable to get rid of the part that is already calculated
+
+        strcat(buf, truncatedTemp);                         // Combine the buffer and the truncatedTemp and store it in the buffer
+        strcpy(temp,buf);                                   // Copy the buffer into the temp variable.
+
+        gcvt(val,6,tempBuf);                                // Update the temporary buffer
+
+    }
+
+    (*index) += i;                                          // Update the universal index
+
+    return val;                                             // Return the final value
+} /* --- End of phranthesisRepeater() --- */
 
 /* --- evaluateFactor() function ---
  * Since this program use recursion to go through each character in
@@ -102,22 +188,24 @@ static float evaluateFactor(char *str, int *index) {
 
     // Check if there is an opening paranthesis
     if (str[*index] == '(' || str[*index] == '[' || str[*index] == '{') {
-        (*index)++;                                     // Skip the opening paranthesis
-        float result = evaluateExpression(str, index);  // Get the expressions in the paranthesis
-        (*index)++;                                     // Skip the closing parenthesis
+        (*index)++;                                         // Skip the opening paranthesis
+
+        float result = phranthesisRepeater(str, index);
+
+        (*index)++;                                         // Skip the closing parenthesis
         return result;                                  
     }
 
     // Check for Pi
     if ( ( str[*index] == 'p' || str[*index] == 'P' ) && ( str[*index + 1] == 'i' || str[*index + 1] == 'I' )) {
-        *index += 2;                                    // Skip the "pi"
-        return M_PI;                                    // Return the pre-defined value for pi
+        *index += 2;                                        // Skip the "pi"
+        return M_PI;                                        // Return the pre-defined value for pi
     }
 
     // Check for Euler's number (e)
     if (str[*index] == 'e') {
-        (*index)++;                                     // Skip the 'e'
-        return M_E;                                     // Return the pre-defined value for Euler's Number
+        (*index)++;                                         // Skip the 'e'
+        return M_E;                                         // Return the pre-defined value for Euler's Number
     }
 
     // Get the unparsed part of the expression entered by the user
@@ -130,7 +218,7 @@ static float evaluateFactor(char *str, int *index) {
     if (temp[0] == 's' && temp[1] == 'q' && temp[2] == 'r' && temp[3] == 't') {
         if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
             *index += 5;                                    // Move the index past "sqrt("
-            expression = evaluateExpression(str, index);    // Resolve the expressions inside the square root
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the square root
             (*index)++;                                     // Skip the closing parenthesis
             return sqrt(expression);
         }
@@ -140,7 +228,10 @@ static float evaluateFactor(char *str, int *index) {
     if (temp[0] == 'r' && temp[1] == 'o' && temp[2] == 'u' && temp[3] == 'n' && temp[4] == 'd') {
         if (temp[5] == '(' || temp[5] == '[' || temp[5] == '{') {
             *index += 6;                                    // Move the index past "round("
-            expression = evaluateExpression(str, index);    // Resolve the expressions inside the rounding
+            //expression = evaluateExpression(str, index);    // Resolve the expressions inside the rounding
+
+            expression = phranthesisRepeater(str, index);
+
             (*index)++;                                     // Skip the closing parenthesis
             return round(expression);
         }
@@ -150,7 +241,7 @@ static float evaluateFactor(char *str, int *index) {
     if (temp[0] == 'f' && temp[1] == 'l' && temp[2] == 'o' && temp[3] == 'o' && temp[4] == 'r') {
         if (temp[5] == '(' || temp[5] == '[' || temp[5] == '{') {
             *index += 6;                                    // Move the index past "floor("
-            expression = evaluateExpression(str, index);    // Resolve the expressions inside the flooring
+            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the flooring
             (*index)++;                                     // Skip the closing parenthesis
             return floor(expression);
         }
@@ -160,9 +251,49 @@ static float evaluateFactor(char *str, int *index) {
     if (temp[0] == 'c' && temp[1] == 'e' && temp[2] == 'i' && temp[3] == 'l') {
         if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
             *index += 5;                                    // Move the index past "ceil("
-            expression = evaluateExpression(str, index);    // Resolve the expressions inside the ceiling
+            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
             return ceil(expression);
+        }
+    }
+
+    // Check for "sin("
+    if (temp[0] == 's' && temp[1] == 'i' && temp[2] == 'n') {
+        if (temp[3] == '(' || temp[3] == '[' || temp[3] == '{') {
+            *index += 4;                                    // Move the index past "ceil("
+            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            (*index)++;                                     // Skip the closing parenthesis
+            return sinf(expression);
+        }
+    }
+
+    // Check for "cos("
+    if (temp[0] == 'c' && temp[1] == 'o' && temp[2] == 's') {
+        if (temp[3] == '(' || temp[3] == '[' || temp[3] == '{') {
+            *index += 4;                                    // Move the index past "ceil("
+            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            (*index)++;                                     // Skip the closing parenthesis
+            return cosf(expression);
+        }
+    }
+
+    // Check for "tan("
+    if (temp[0] == 't' && temp[1] == 'a' && temp[2] == 'n') {
+        if (temp[3] == '(' || temp[3] == '[' || temp[3] == '{') {
+            *index += 4;                                    // Move the index past "ceil("
+            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            (*index)++;                                     // Skip the closing parenthesis
+            return tanf(expression);
+        }
+    }
+
+    // Check for "cot("
+    if (temp[0] == 'c' && temp[1] == 'o' && temp[2] == 't') {
+        if (temp[3] == '(' || temp[3] == '[' || temp[3] == '{') {
+            *index += 4;                                    // Move the index past "ceil("
+            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            (*index)++;                                     // Skip the closing parenthesis
+            return (float)1/tanf(expression);
         }
     }
 
@@ -321,42 +452,41 @@ static void removeSpace(char* str) {
  */
 float textCalc(char *str) {
 
-    int index;                                      // Output index
-    int i = 0;                                      // Current index
+    int index;                                              // Output index
+    int i = 0;                                              // Current index
     
-    removeSpace(str);                               // Remove whitespace from the string
+    removeSpace(str);                                       // Remove whitespace from the string
 
-    float val = 0.00;                               // Output value
-    char buf[100];                                  // Buffer variable
+    float val = 0.00f;                                      // Output value
+    char buf[100];                                          // Buffer variable
     
-    char temp[strlen(str)+1];                       // Temporary varaible
-    strcpy(temp,str);                               // Copy input string into the temporary variable
+    char temp[strlen(str)+1];                               // Temporary varaible
+    strcpy(temp,str);                                       // Copy input string into the temporary variable
     
-    char tempBuf[100];                              // Temporary Buffer Variable
+    char tempBuf[100];                                      // Temporary Buffer Variable
 
     // Iterate through each repetation
     while ((int)strlen(str) > i) {
-        index = 0;                                  // Reset the index
+        index = 0;                                          // Reset the index
         
-        val = evaluateExpression(temp, &index);     // get the output value and pass the index bny reference
+        val = evaluateExpression(temp, &index);             // get the output value and pass the index by reference
         
-        gcvt(val,6,buf);                            // Store the output value as a string in the buffer
+        gcvt(val,6,buf);                                    // Store the output value as a string in the buffer
 
         // Update the current index accordingly
         if (i>0) {
-            i += index - (int)strlen(tempBuf);      // Decrease the output index by the number of digits of the previous itteration value
+            i += index - (int)strlen(tempBuf);              // Decrease the output index by the number of digits of the previous itteration value
         } else {
             i += index;                             
         }
-        
 
-        char *truncatedTemp = temp + index;         // Truncate the temp variable to get rid of the part that is already calculated
+        char *truncatedTemp = temp + index;                 // Truncate the temp variable to get rid of the part that is already calculated
         
-        strcat(buf, truncatedTemp);                 // Combine the buffer and the truncatedTemp and store it in the buffer
-        strcpy(temp,buf);                           // Copy the buffer into the temp variable.
+        strcat(buf, truncatedTemp);                         // Combine the buffer and the truncatedTemp and store it in the buffer
+        strcpy(temp,buf);                                   // Copy the buffer into the temp variable.
         
-        gcvt(val,6,tempBuf);                        // Update the temporary buffer
+        gcvt(val,6,tempBuf);                                // Update the temporary buffer
     }
 
-    return val;                                     // Return the final value
+    return val;                                             // Return the final value
 }

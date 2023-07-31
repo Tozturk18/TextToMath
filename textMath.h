@@ -24,6 +24,20 @@
  */
 static float getNumber(char *str, int *index);
 
+/* --- phranthesisRepeater() Function ---
+ * This function parses the input string that contains paranthesis to handle
+ * embedded paranthesis and multiple expressions.
+ * 
+ * Parameters:
+ *  - char *str: This is the string containing the mathematical expression
+ *  - int *index: This is an integer index variable passed by reference.
+ *      index variable keeps track of the current index the program is on.
+ * 
+ * Return:
+ * - number: a float value, containing the parsed value from the string.
+ */
+static float phranthesisRepeater(char *str, int *index);
+
 /* --- evaluateFactor() function ---
  * This function is mainly to check for the paranthesis.
  * However, it is also a convinient spot to put other checks such as the ones
