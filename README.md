@@ -35,6 +35,18 @@ The mathematical expressions are very similar to the ones used by Google Search 
 6. Ceiling:
     - To ceil the float value to the nearest higher integer you can use the ```"ceil(0.234)"``` mathematical function and in this example the result should be ```1.00```
 
+7. Sine:
+    - To find the sine of an angle you can use the ```sin(pi/6)``` mathematical trig function and in this example the result should be ```0.5```
+
+8. Cosine:
+    - To find the cosine of an angle you can use the ```cos(30deg)``` mathematical trig function and in this example the result should be ```0.87```
+
+8. Tangent:
+    - To find the tangent of an angle you can use the ```tan( (20+25)deg )``` mathematical trig function and in this example the result should be ```1.00```
+
+9. Cotangent:
+    - To find the cotangent of an angle you can use the ```cot( (15*2)deg )``` mathematical trig function and in this example the result should be ```1.73```
+
 7. Multiplication:
     - To multiply two float values you can use either the star sign '```*```' or the underscore '```_```' sign. For example entering ```"3.25*2.68"``` would result in ```8.71```
 
