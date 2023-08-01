@@ -15,7 +15,7 @@ This function takes in a string (a char array) and returns a float number that c
 This repository contains an "example" folder where you can find an example.c code file, a Makefile and an executable "example" file. To try out the TextToMath Program you can run the example executable and it will ask you to input a mathematical expression. Then enter your mathematical expression to get the solution.
 
 ## Usage
-The mathematical expressions are very similar to the ones used by Google Search and Desmos or Geogebra.
+The mathematical expressions are very similar to the ones used by Google Search, Desmos, and Geogebra. (Inline inputs to the terminal, or command center requires for the mathematical expression to not be seperated with spaces or it will detect each term seperated by a space as seperate inputs.)
 
 1. parenthesis:
     - To create a term with parenthesis you can simply use the parenthesis "```(3+2)```", or square brackets "```[3+2]```", or curly brackets "```{3+2}```" sign. In this example the solution would be ```5.00```
@@ -57,7 +57,7 @@ The mathematical expressions are very similar to the ones used by Google Search 
     - To find the inverse tangent of an angle you can use the ```atan(0.9)``` mathematical trig function and in this example the result should be ```0.73```
 
 13. Arccotangent:
-    - To find the inverse sine of an angle you can use the ```acot(0.9)``` mathematical trig function and in this example the result should be ```1.36```
+    - To find the inverse cotangent of an angle you can use the ```acot(0.9)``` mathematical trig function and in this example the result should be ```1.36```
 
 14. Multiplication:
     - To multiply two float values you can use either the star sign '```*```' or the underscore '```_```' sign. For example entering ```"3.25*2.68"``` would result in ```8.71```
@@ -90,5 +90,16 @@ This is why the multiplication opperation is supported with the underscore chara
 ### Example 1
 
 ```
+Welcome! Thank you for trying out Text-To-Math program.
+Please enter a mathematical expression below!
+Currently the character limit is 225 character...
+
 2.45*e^round(1.36*(10.4+sqrt(8)*pi)/3)
+Solution: 19852.55
+```
+---
+### Example 2
+
+```
+./
 ```
