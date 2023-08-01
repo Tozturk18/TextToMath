@@ -3,34 +3,23 @@
 #include <string.h>
 #include "../../textMath.h"
 
-char* anan(char* str) {
+int main(int argc, char *argv[]) {
 
-    
-    char temp[225];
-    strcpy(temp, str);
+    // Fail Safe
+    if (argc < 2) {
+        printf("\nPlease input a mathematical expression to run this program.\n");
+        return 0;
+    } else if (argc > 2) {
+        printf("\nPlease make sure that you do not have spaces between the terms of your mathematical expression.\nEven though the Text-To-Math library can handle spaces, the terminal cannot.\n");
+        return 0;
+    }
 
-    char* first = strchr(temp, '(') + 1;
-    char* last = strrchr(temp, ')');
-    *last = '\0';
+    // Get the result from the Text-To-Math library
+    float result = textCalc(argv[1]);
 
-    printf("\nfirst: %s\n", first);
+    // Display the result
+    printf("\nSolution: %.2f\n", result);
 
-    return first;
-}
-
-int main() {
-    printf("\nWelcome! Thank you for trying out Text-To-Math program.\nPlease enter a mathematical expression below!\nCurrently the character limit is 225 character...\n\n");
-    char expression[225];
-    fgets(expression, sizeof(expression), stdin);
-    
-    float solution = textCalc(expression);
-    printf("Solution: %.2f\n", solution);
-
-    /*char stupid[225] = "2-((2+2+2)*(2+2))*2";
-
-    char* first = anan(stupid);
-
-    printf("\nStupid: %s, first: %s\n", stupid, first);*/
-
+    // End the program
     return 0;
 }
