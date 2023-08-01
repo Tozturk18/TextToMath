@@ -2,9 +2,9 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 LDFLAGS = -lm
 
-TARGET = example
-SRCS = example.c
-LIBS = ../textMath.c
+TARGET = example1
+SRCS = example1.c
+LIBS = ../../textMath.c
 OBJS = $(SRCS:.c)
 
 ifeq ($(shell uname),Darwin)

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../textMath.h"
+#include "../../textMath.h"
 
 char* anan(char* str) {
 
