@@ -1,6 +1,6 @@
 /* textMath.c 
  * Created by Ozgur Tuna Ozturk and ChatGPT on July 14, 2023.
- * Last updated on July 18, 2023.
+ * Last updated on August 1, 2023.
  * 
  * This file contains the code for parsing a string into float variables,
  * and then interpret the mathematical expressions to calculate the final desired result.
@@ -20,12 +20,12 @@
  *  - acos(): This takes the inverse cosine of values inside the paranthesis
  *  - atan(): This takes the inverse tangent of values inside the paranthesis
  *  - acot(): This takes the inverse cotangent of values inside the paranthesis
- * (Support for more functionalities will come soon).
+ * (Support for more functionalities will come soon...)
  * 
  * This program also supports some pre-defined mathematical constants:
  *  - pi: (~3.14) The ratio of a circle's circumference to its diameter
  *  - e: (~2.72) Euler's constant
- * (Support for more constants will come soon).
+ * (Support for more constants will come soon...)
  */
 
 /* --- Imports --- */

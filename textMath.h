@@ -1,6 +1,6 @@
 /* textMath.h 
  * Created by Ozgur Tuna Ozturk and ChatGPT on July 14, 2023.
- * Last updated July 15, 2023.
+ * Last updated August 1, 2023.
  * 
  * This is the header file for the Text-To-Math program. This file contains all the 
  * definitions of the functions that are used. Almost all of the functions except one are static.
