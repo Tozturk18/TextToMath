@@ -90,6 +90,8 @@ This is why the multiplication opperation is supported with the underscore chara
 ### Example 1
 
 ```
+./example1
+
 Welcome! Thank you for trying out Text-To-Math program.
 Please enter a mathematical expression below!
 Currently the character limit is 225 character...
@@ -101,5 +103,8 @@ Solution: 19852.55
 ### Example 2
 
 ```
-./
+./example2 180deg
+
+Solution: 3.14
 ```
+---
