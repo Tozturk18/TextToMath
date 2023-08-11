@@ -73,13 +73,13 @@ static float getNumber(char *str, int *index) {
     // Radians to degrees (the user simply needs to enter "deg" next to a number)
     if (temp[0] == 'd' && temp[1] == 'e' && temp[2] == 'g') {
 
-        number = number * M_PI / 180;                       // Convert radians to degrees
+        number = (float)round(number * M_PI / 180 * 1000) / 1000;                       // Convert radians to degrees
         i += 3;                                             // move index by 3 positions
     
     // Degrees to radians (the user simply needs to enter "rad" next to a number)
     } else if (temp[0] == 'r' && temp[1] == 'a' && temp[2] == 'd') {
 
-        number = number * 180 / M_PI;                       // Convert degrees to radians
+        number = (float)round(number * 180 / M_PI * 1000) / 1000;                       // Convert degrees to radians
         i += 3;                                             // move index by 3 positions
 
     // Factorial
