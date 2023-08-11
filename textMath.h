@@ -1,6 +1,6 @@
 /* textMath.h 
  * Created by Ozgur Tuna Ozturk and ChatGPT on July 14, 2023.
- * Last updated August 1, 2023.
+ * Last updated August 11, 2023.
  * 
  * This is the header file for the Text-To-Math program. This file contains all the 
  * definitions of the functions that are used. Almost all of the functions except one are static.
@@ -108,8 +108,23 @@ static float evaluateExpression(char *str, int *index);
  */
 static void removeSpace(char* str);
 
+/* --- textCalcStr() function ---
+ * This is a non static function which allows the user to call only this function.
+ * This function triggers the removeSpace() and evaluateExpression functions to clean the string
+ * containing the mathematical expression and trigger the recursion to solve it.
+ * 
+ * Parameters:
+ *  - char *str: This is a string that contains mathematical expressions.
+ * 
+ * Return:
+ * - char*: this function returns a char array that holds a string which is the complete
+ *      solution of the mathematical expression inputed by the user. This function returns 
+ *      the result in scientific notation if the number is larger than 10^10 or abs(val) < 0.1
+ */
+char *textCalcStr(char *str);
+
 /* --- textCalc() function ---
- * This is the only non static function which allows the user to call only this function.
+ * This is a non static function which allows the user to call only this function.
  * This function triggers the removeSpace() and evaluateExpression functions to clean the string
  * containing the mathematical expression and trigger the recursion to solve it.
  * 
