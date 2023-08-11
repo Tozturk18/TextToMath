@@ -4,7 +4,7 @@ This program allows for user to enter a set of mathematical expressions as a str
 This program can support basic mathematical expressions such as addition, substraction, multiplication, division, modulus, and exponents.
 This program does also support mathematical constants and expressions such as pi, Euler's number, square root, rounding, flooring, and ceiling, trigonometry, logarithm, factorial, etc...
 
-In the example folder there are 2 example codes that you can run to play around with this library. Example 1 will ask you to enter a mathematical equation or an expression and it will solve it for you. Try something hard! If it does not work please contact me so I can fix the bug. Reach out to me at [tunaozturk2001@hotmail.com](mailto:tunaozturk2001@hotmail.com)
+In the example folder there are 2 example codes that you can run to play around with this library. Example 1 will ask you to enter a mathematical equation or an expression and it will solve it for you. Try something hard! If it does not work please contact me so I can fix the bug. Reach out to me at [tunaozturk2001@hotmail.com](mailto:tunaozturk2001@hotmail.com?subject=[GitHub]TextToMath)
 
 More updates will be coming as needed to fix bugs or add new mathematical functionalities such as complex numbers, calculus, etc...
 
