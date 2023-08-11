@@ -2,20 +2,26 @@
 This program allows for user to enter a set of mathematical expressions as a string and get the solution. This program is initially created to support the KiCAD_Coil repository but it grew to become a handy and fast offline calculator that became really useful!
 
 This program can support basic mathematical expressions such as addition, substraction, multiplication, division, modulus, and exponents.
-This program does also support mathematical constants and expressions such as pi, Euler's number, square root, rounding, flooring, and ceiling.
+This program does also support mathematical constants and expressions such as pi, Euler's number, square root, rounding, flooring, and ceiling, trigonometry, logarithm, factorial, etc...
 
-In the example folder there is an example code that you can run to play with it. It will ask you to enter a mathematical equation or an expression and it will solve it for you. Try something hard! If it does not work please contact me so I can fix the bug.
+In the example folder there are 2 example codes that you can run to play around with this library. Example 1 will ask you to enter a mathematical equation or an expression and it will solve it for you. Try something hard! If it does not work please contact me so I can fix the bug. Reach out to me at <a href="mailto:tunaozturk2001@hotmail.com">tunaozturk2001@hotmail.com</a>
 
 More updates will be coming as needed to fix bugs or add new mathematical functionalities such as complex numbers, calculus, etc...
 
-The library only allows the use of the ```float textCalc(char *str)``` function. All the other functions defined in the header file (textMath.h) are static and only used by the program itself. To use this program calling the ```textCalc()``` function is enough. 
+The library only allows the use of the ```float textCalc(char *str)``` function and the ```char* textCalcStr(char *str)``` function. All the other functions defined in the header file (textMath.h) are static and only used by the program itself. To use this program calling the ```textCalc()``` function or the ```textCalcStr()``` is enough. 
 
-This function takes in a string (a char array) and returns a float number that contains the solution of the mathematical expressions written in the string.
+Both functions takes in a string (a char array) and returns a value containing the solution of the mathematical expressions written in the string. ```textCalc()``` returns the value as a float value and ```textCalcStr()``` returns the value as a string.
 
-This repository contains an "example" folder where you can find an example.c code file, a Makefile and an executable "example" file. To try out the TextToMath Program you can run the example executable and it will ask you to input a mathematical expression. Then enter your mathematical expression to get the solution.
+```textCalcStr()``` has an upside of being able to handle large numbers because outputing the result as a string allows for it to output using scientific notation for very large and very small outputs.
+
+This repository contains an "examples" folder where you can find an 2 different example files. The "example1" folder contains "example1.c" file which is a program that uses the TextToMath library to find the solution to the user input and repeat. Meanwhile the "example2.c" file showcases the use of TextToMath library via an inline argument while running the executable.
+
+To try out the TextToMath Program you can run the example1 and example2 executables. You can find some examples to try on them at the bottom of this <a href="#examples">README file</a>
 
 ## Usage
-The mathematical expressions are very similar to the ones used by Google Search, Desmos, and Geogebra. (Inline inputs to the terminal, or command center requires for the mathematical expression to not be seperated with spaces or it will detect each term seperated by a space as seperate inputs.)
+The mathematical expressions are very similar to the ones used by Google Search, <a href="https://www.desmos.com/scientific">Desmos Scientific Calculator</a>, and <a href="https://www.geogebra.org/?lang=en">Geogebra</a>. 
+
+(Inline inputs to the terminal, or command center requires for the mathematical expression to not be seperated with spaces or it will detect each term seperated by a space as seperate inputs. The inline inputs also do not allow the usage of paranthesis "```()```" and only allows curly "```{}```" or square brackets "```[]```". Moreover, inline inputs does not allow '```*```' for multiplication, instead '```_```' can be used.)
 
 1. parenthesis:
     - To create a term with parenthesis you can simply use the parenthesis "```(3+2)```", or square brackets "```[3+2]```", or curly brackets "```{3+2}```" sign. In this example the solution would be ```5.00```
@@ -69,10 +75,10 @@ The mathematical expressions are very similar to the ones used by Google Search,
     - To find the log base 10 of a value you can use the ```log(100)``` mathematical function and in this example the result shoul be ```2.00```
 
 17. Log base X:
-    - To find the log base X of a value where X is another user defined value, you can use the ```log2(16)``` mathematical function and in this example the result should be ```4.00```
+    - To find the log base X of a value where X is another user defined value you can use the ```log2(16)``` mathematical function and in this example the result should be ```4.00```
 
 18. Factorial
-    - To find the factorial of a value, you can use the ```(2+3)!``` mathematical expression and in this example the result should be ```6.00```
+    - To find the factorial of a value you can use the ```(2+3)!``` mathematical expression and in this example the result should be ```6.00```
 
 19. Radians to Degrees:
     - To convert a radian value to degrees, you can use the ```(pi/2)deg``` mathematical expression and in this example the result should be ```90.0```
@@ -129,3 +135,8 @@ Solution: 19852.55
 Solution: 3.14
 ```
 ---
+
+## Acknowledgements 
+This library is created by Ozgur Tuna Ozturk on July 14, 2023.<br>
+Last edited by Ozgur Tuna Ozturk on August 11, 2023.<br>
+Contributed by ChatGPT on July 14, 2023
