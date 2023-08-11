@@ -4,7 +4,7 @@ This program allows for user to enter a set of mathematical expressions as a str
 This program can support basic mathematical expressions such as addition, substraction, multiplication, division, modulus, and exponents.
 This program does also support mathematical constants and expressions such as pi, Euler's number, square root, rounding, flooring, and ceiling, trigonometry, logarithm, factorial, etc...
 
-In the example folder there are 2 example codes that you can run to play around with this library. Example 1 will ask you to enter a mathematical equation or an expression and it will solve it for you. Try something hard! If it does not work please contact me so I can fix the bug. Reach out to me at <a href="mailto:tunaozturk2001@hotmail.com">tunaozturk2001@hotmail.com</a>
+In the example folder there are 2 example codes that you can run to play around with this library. Example 1 will ask you to enter a mathematical equation or an expression and it will solve it for you. Try something hard! If it does not work please contact me so I can fix the bug. Reach out to me at [tunaozturk2001@hotmail.com](mailto:tunaozturk2001@hotmail.com)
 
 More updates will be coming as needed to fix bugs or add new mathematical functionalities such as complex numbers, calculus, etc...
 
@@ -16,10 +16,10 @@ Both functions takes in a string (a char array) and returns a value containing t
 
 This repository contains an "examples" folder where you can find an 2 different example files. The "example1" folder contains "example1.c" file which is a program that uses the TextToMath library to find the solution to the user input and repeat. Meanwhile the "example2.c" file showcases the use of TextToMath library via an inline argument while running the executable.
 
-To try out the TextToMath Program you can run the example1 and example2 executables. You can find some examples to try on them at the bottom of this <a href="#examples">README file</a>
+To try out the TextToMath Program you can run the example1 and example2 executables. You can find some examples to try on them at the bottom of this [README file](#examples)
 
 ## Usage
-The mathematical expressions are very similar to the ones used by Google Search, <a href="https://www.desmos.com/scientific">Desmos Scientific Calculator</a>, and <a href="https://www.geogebra.org/?lang=en">Geogebra</a>. 
+The mathematical expressions are very similar to the ones used by Google Search, [Desmos Scientific Calculator](https://www.desmos.com/scientific), and [Geogebra](https://www.geogebra.org/?lang=en). 
 
 (Inline inputs to the terminal, or command center requires for the mathematical expression to not be seperated with spaces or it will detect each term seperated by a space as seperate inputs. The inline inputs also do not allow the usage of paranthesis "```()```" and only allows curly "```{}```" or square brackets "```[]```". Moreover, inline inputs does not allow '```*```' for multiplication, instead '```_```' can be used.)
 
