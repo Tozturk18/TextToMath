@@ -4,14 +4,14 @@
  * 
  * This file contains the code for parsing a string into float variables,
  * and then interpret the mathematical expressions to calculate the final desired result.
- * Thi program follows the mathematical principles of oder of operations according to
- * priority such as paranthesis are first, power (^) is second, etc...
+ * This program follows the mathematical principles of order of operations according to the
+ * priority of expressions such as paranthesis are first, power (^) is second, etc...
  * 
  * This program currently also supports some pre-defined functionalities:
  *  - sqrt(): This takes the square root of values inside the paranthesis
  *  - round(): This rounds the values inside the paranthesis to the nearest integer
- *  - floor(): This floors the values inside the paranthesis to the nearest higher integer
- *  - ceil(): This floors the values inside the paranthesis to the nearest lower integer
+ *  - floor(): This rounds down the values inside the paranthesis to the nearest lower integer
+ *  - ceil(): This rounds up the values inside the paranthesis to the nearest higher integer
  *  - sin(): This takes the sine of values inside the paranthesis
  *  - cos(): This takes the cosine of values inside the paranthesis
  *  - tan(): This takes the tangent of values inside the paranthesis
@@ -31,8 +31,9 @@
  * (Support for more constants will come soon...)
  * 
  * This program also supports for Degrees to Radians and vice versa conversions
- * - (number)deg: putting the word "deg" converts the number to degrees assuming it was in radians originally
- * - (number)rad: putting the word "rad" converts the number to radians assuming it was in degrees originally
+ *  - (number)deg: putting the word "deg" converts the number to degrees assuming it was in radians originally
+ *  - (number)rad: putting the word "rad" converts the number to radians assuming it was in degrees originally
+ *  - (number)!: putting the character '!' takes the factorial of the number.
  */
 
 /* --- Imports --- */
@@ -46,11 +47,11 @@
 /* --- getNumber() Function ---
  * This function parses the input string starting from a certain
  * index value to get the float value in the string. This function
- * uses atof() function as a trick to only get the number until it makes sense.
- * Hence, if you do atof("2.45*2"); then you will get 2.45 as a float value, 
- * because atof takes in every digit until it reaches '*' and ignores everything else
+ * uses strtof() function as a trick to only get the number until it makes sense.
+ * Hence, if you do strtof("2.45*2"); then you will get 2.45 as a float value, 
+ * because atof takes in every digit until it reaches '*' and gives you a pointer at '*',
  * since 2.45*2 is not a number so the nearest correct thing is 2.45. Moreover, a temp
- * string is used to chop off the already stored values so that atof() function can
+ * string is used to chop off the already stored values so that strtof() function can
  * now store that other 2.00 in "2.45*2".
  * 
  * Parameters:
@@ -62,11 +63,10 @@
  * - number: a float value, containing the parsed value from the string.
  */
 static float getNumber(char *str, int *index) {
-
     
     char *temp = str + *index;                              // Create a temp string containing only the unparsed part
                  
-    float number = strtof(temp, &temp);                    // Parse the number as float value                            
+    float number = strtof(temp, &temp);                     // Parse the number as float value                            
 
     int i = temp - (str + *index);                          // keep track of the number of digits on the number
 
@@ -81,6 +81,12 @@ static float getNumber(char *str, int *index) {
 
         number = number * 180 / M_PI;                       // Convert degrees to radians
         i += 3;                                             // move index by 3 positions
+
+    // Factorial
+    } else if (temp[0] == '!') {
+
+        number = tgamma(number+1);
+        i++;
 
     // Fail Safe for wrong input
     } else if (!isdigit(temp[0]) && temp[0] != '^' && temp[0] != '*' && temp[0] != '_' && temp[0] != '/' && temp[0] != '%' && temp[0] != '+' && temp[0] != '-' && temp[0] != ')' && temp[0] != '}' && temp[0] != ']' && temp[0] != '(' && temp[0] != '{' && temp[0] != '[' && temp[0] != '\0' ) {
@@ -125,7 +131,7 @@ static float getNumber(char *str, int *index) {
  */
 static float phranthesisRepeater(char *str, int *index) {
 
-    int openParan = 0;                                      // The number of open paranthesis
+    int openParan = 0;                                      // The number of unterminated open paranthesis
 
     // truncated string containing the initial string without the paranthesis
     char truncatedStr[(int)strlen(str)+1];
@@ -136,14 +142,14 @@ static float phranthesisRepeater(char *str, int *index) {
 
         // Count the number of embedded open paranthesis
         if (truncatedStr[i] == '(' || truncatedStr[i] == '{' || truncatedStr[i] == '[') {
-            openParan++;
+            openParan++;                                    // Increment the number of unterminated open paranthesis
         }
 
         // Check if the close paranthesis belongs to the truncated open paranthesis
         if ( (truncatedStr[i] == ')' || truncatedStr[i] == '}' || truncatedStr[i] == ']' ) && openParan > 0) {
-            openParan--;
+            openParan--;                                    // Decrement the number of unterminated open paranthesis
         } else if ( ( truncatedStr[i] == ')' || truncatedStr[i] == '}' || truncatedStr[i] == ']' ) && openParan == 0) {
-            truncatedStr[i] = '\0';
+            truncatedStr[i] = '\0';                         // Truncate the string from pos i
         }
     }
 
@@ -210,7 +216,7 @@ static float evaluateFactor(char *str, int *index) {
     if (str[*index] == '(' || str[*index] == '[' || str[*index] == '{') {
         (*index)++;                                         // Skip the opening paranthesis
 
-        float result = phranthesisRepeater(str, index);
+        float result = phranthesisRepeater(str, index);     // Resolve the expression inside the paranthesis
 
         (*index)++;                                         // Skip the closing parenthesis
         return result;                                  
@@ -218,7 +224,7 @@ static float evaluateFactor(char *str, int *index) {
 
     // Check for Pi
     if ( ( str[*index] == 'p' || str[*index] == 'P' ) && ( str[*index + 1] == 'i' || str[*index + 1] == 'I' )) {
-        *index += 2;                                        // Skip the "pi"
+        (*index) += 2;                                        // Skip the "pi"
         return M_PI;                                        // Return the pre-defined value for pi
     }
 
@@ -238,7 +244,7 @@ static float evaluateFactor(char *str, int *index) {
     if (temp[0] == 's' && temp[1] == 'q' && temp[2] == 'r' && temp[3] == 't') {
         if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
             *index += 5;                                    // Move the index past "sqrt("
-            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the square root
+            expression = phranthesisRepeater(str, index);   // Resolve the expression inside the square root
             (*index)++;                                     // Skip the closing parenthesis
             return sqrt(expression);
         }
@@ -248,10 +254,7 @@ static float evaluateFactor(char *str, int *index) {
     if (temp[0] == 'r' && temp[1] == 'o' && temp[2] == 'u' && temp[3] == 'n' && temp[4] == 'd') {
         if (temp[5] == '(' || temp[5] == '[' || temp[5] == '{') {
             *index += 6;                                    // Move the index past "round("
-            //expression = evaluateExpression(str, index);    // Resolve the expressions inside the rounding
-
-            expression = phranthesisRepeater(str, index);
-
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the rounding
             (*index)++;                                     // Skip the closing parenthesis
             return round(expression);
         }
@@ -261,7 +264,7 @@ static float evaluateFactor(char *str, int *index) {
     if (temp[0] == 'f' && temp[1] == 'l' && temp[2] == 'o' && temp[3] == 'o' && temp[4] == 'r') {
         if (temp[5] == '(' || temp[5] == '[' || temp[5] == '{') {
             *index += 6;                                    // Move the index past "floor("
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the flooring
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the flooring
             (*index)++;                                     // Skip the closing parenthesis
             return floor(expression);
         }
@@ -271,7 +274,7 @@ static float evaluateFactor(char *str, int *index) {
     if (temp[0] == 'c' && temp[1] == 'e' && temp[2] == 'i' && temp[3] == 'l') {
         if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
             *index += 5;                                    // Move the index past "ceil("
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
             return ceil(expression);
         }
@@ -280,89 +283,88 @@ static float evaluateFactor(char *str, int *index) {
     // Check for "sin("
     if (temp[0] == 's' && temp[1] == 'i' && temp[2] == 'n') {
         if (temp[3] == '(' || temp[3] == '[' || temp[3] == '{') {
-            *index += 4;                                    // Move the index past "ceil("
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            *index += 4;                                    // Move the index past "sin("
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
-            printf("\nExpression: %.2f\n", expression);
-            return round(sinf(expression)*1000000)/1000000;
+            return round(sinf(expression)*1000000)/1000000; // Round the uncertainty in float value
         }
     }
 
     // Check for "cos("
     if (temp[0] == 'c' && temp[1] == 'o' && temp[2] == 's') {
         if (temp[3] == '(' || temp[3] == '[' || temp[3] == '{') {
-            *index += 4;                                    // Move the index past "ceil("
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            *index += 4;                                    // Move the index past "cos("
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
-            return round(cosf(expression)*1000000)/1000000;
+            return round(cosf(expression)*1000000)/1000000; // Round the uncertainty in float value
         }
     }
 
     // Check for "tan("
     if (temp[0] == 't' && temp[1] == 'a' && temp[2] == 'n') {
         if (temp[3] == '(' || temp[3] == '[' || temp[3] == '{') {
-            *index += 4;                                    // Move the index past "ceil("
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            *index += 4;                                    // Move the index past "tan("
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
-            return round(tanf(expression)*1000000)/1000000;
+            return round(tanf(expression)*1000000)/1000000; // Round the uncertainty in float value
         }
     }
 
     // Check for "cot("
     if (temp[0] == 'c' && temp[1] == 'o' && temp[2] == 't') {
         if (temp[3] == '(' || temp[3] == '[' || temp[3] == '{') {
-            *index += 4;                                    // Move the index past "ceil("
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            *index += 4;                                    // Move the index past "cot("
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
-            return round((float)1/tanf(expression)*1000000)/1000000;
+            return round((float)1/tanf(expression)*1000000)/1000000; // Round the uncertainty in float value
         }
     }
 
     // Check for "asin("
     if (temp[0] == 'a' && temp[1] == 's' && temp[2] == 'i' && temp[3] == 'n') {
         if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
-            *index += 5;                                    // Move the index past "ceil("
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            *index += 5;                                    // Move the index past "asin("
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
-            return round(asinf(expression)*1000000)/1000000;
+            return round(asinf(expression)*1000000)/1000000;// Round the uncertainty in float value
         }
     }
 
     // Check for "acos("
     if (temp[0] == 'a' && temp[1] == 'c' && temp[2] == 'o' && temp[3] == 's') {
         if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
-            *index += 5;                                    // Move the index past "ceil("
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            *index += 5;                                    // Move the index past "acos("
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
-            return round(acosf(expression)*1000000)/1000000;
+            return round(acosf(expression)*1000000)/1000000;// Round the uncertainty in float value
         }
     }
 
     // Check for "atan("
     if (temp[0] == 'a' && temp[1] == 't' && temp[2] == 'a' && temp[3] == 'n') {
         if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
-            *index += 5;                                    // Move the index past "ceil("
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            *index += 5;                                    // Move the index past "atan("
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
-            return round(atanf(expression)*1000000)/1000000;
+            return round(atanf(expression)*1000000)/1000000;// Round the uncertainty in float value
         }
     }
 
     // Check for "acot("
     if (temp[0] == 'a' && temp[1] == 'c' && temp[2] == 'o' && temp[3] == 't') {
         if (temp[4] == '(' || temp[4] == '[' || temp[4] == '{') {
-            *index += 5;                                    // Move the index past "ceil("
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            *index += 5;                                    // Move the index past "acot("
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
-            return round((float)1/atanf(expression)*1000000)/1000000;
+            return round((float)1/atanf(expression)*1000000)/1000000; // Round the uncertainty in float value
         }
     }
 
     // Check for "abs("
     if (temp[0] == 'a' && temp[1] == 'b' && temp[2] == 's') {
         if (temp[3] == '(' || temp[3] == '[' || temp[3] == '{') {
-            *index += 4;                                    // Move the index past "ceil("
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            *index += 4;                                    // Move the index past "abs("
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
             return fabs(expression);
         }
@@ -371,8 +373,8 @@ static float evaluateFactor(char *str, int *index) {
     // Check for "ln("
     if (temp[0] == 'l' && temp[1] == 'n') {
         if (temp[2] == '(' || temp[2] == '[' || temp[2] == '{') {
-            *index += 3;                                    // Move the index past "ceil("
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            *index += 3;                                    // Move the index past "ln("
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
             return log(expression);
         }
@@ -382,23 +384,23 @@ static float evaluateFactor(char *str, int *index) {
     if (temp[0] == 'l' && temp[1] == 'o' && temp[2] == 'g') {
         *index += 3;                                        // Move the index past "log"
         if (temp[3] == '(' || temp[3] == '[' || temp[3] == '{') {
-            (*index)++;                                      // Move the index past opening parenthesis
-            expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+            (*index)++;                                     // Move the index past opening parenthesis
+            expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
             (*index)++;                                     // Skip the closing parenthesis
             return log10(expression);
         } else {
             float base = evaluateExpression(str,index);
             if ((int)base != 0) {
                 if (temp[*index] == '(' || temp[*index] == '[' || temp[*index] == '{') {
-                    (*index)++;                                      // Move the index past opening parenthesis
-                    expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
-                    (*index)++;                                      // Skip the closing parenthesis
-                    return (float)log(expression)/log(base);
+                    (*index)++;                                     // Move the index past opening parenthesis
+                    expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
+                    (*index)++;                                     // Skip the closing parenthesis
+                    return (float)log(expression)/log(base);        // Take the log with a custom base
                 }
             } else {
                 if (temp[*index] == '(' || temp[*index] == '[' || temp[*index] == '{') {
-                    (*index)++;                                      // Move the index past opening parenthesis
-                    expression = phranthesisRepeater(str, index);    // Resolve the expressions inside the ceiling
+                    (*index)++;                                     // Move the index past opening parenthesis
+                    expression = phranthesisRepeater(str, index);   // Resolve the expressions inside the ceiling
                     (*index)++;                                     // Skip the closing parenthesis
                     return log10(expression);
                 }
@@ -413,9 +415,8 @@ static float evaluateFactor(char *str, int *index) {
 /* --- evaluatePower() function ---
  * This function has the second mathematical order for resolving power
  * and the third order in the recursion.
- * Since after the power sign, the only things that can come is the 
- * mathematical factors and constants, numbers, or a paranthesis,
- * then recursion can be directly be started with evaluateFactor() function.
+ * This function calls the evaluateFactor function and deals with exponents.
+ * This function also allows for differentiation between -1^2 and (-1)^2
  * 
  * Parameters:
  *  - char *str: This is the string containing the mathematical expression

@@ -112,6 +112,8 @@ static void removeSpace(char* str);
  * This is a non static function which allows the user to call only this function.
  * This function triggers the removeSpace() and evaluateExpression functions to clean the string
  * containing the mathematical expression and trigger the recursion to solve it.
+ * When the values gets very large or very small this function uses scientific notation to not
+ * overflow the float variables.
  * 
  * Parameters:
  *  - char *str: This is a string that contains mathematical expressions.
@@ -127,6 +129,8 @@ char *textCalcStr(char *str);
  * This is a non static function which allows the user to call only this function.
  * This function triggers the removeSpace() and evaluateExpression functions to clean the string
  * containing the mathematical expression and trigger the recursion to solve it.
+ * unlike textCalcStr() this function do not use scientific notation which causes float overflow in some
+ * operations when dealing with large numbers.
  * 
  * Parameters:
  *  - char *str: This is a string that contains mathematical expressions.
