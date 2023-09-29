@@ -51,7 +51,7 @@ int main() {
 
         // Repeating message
         printf("\n------------------------------------------------------------------------------------\n");
-        printf("You can enter a new expression below to solve or you can type 'N' and enter to exit.");
+        printf("Continue? [Expression | N]");
         printf("\n------------------------------------------------------------------------------------\n");
 
         // Input the user's mathematical expression

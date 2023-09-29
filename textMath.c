@@ -30,10 +30,25 @@
  *  - e: (~2.72) Euler's constant
  * (Support for more constants will come soon...)
  * 
- * This program also supports for Degrees to Radians and vice versa conversions
- *  - (number)deg: putting the word "deg" converts the number to degrees assuming it was in radians originally
- *  - (number)rad: putting the word "rad" converts the number to radians assuming it was in degrees originally
- *  - (number)!: putting the character '!' takes the factorial of the number.
+ * This program also supports for some conversions
+ *  --- Angle Conversions ---
+ *  - (number)deg:  putting the word "deg" converts the number to degrees assuming it was in radians originally
+ *  - (number)rad:  putting the word "rad" converts the number to radians assuming it was in degrees originally
+ *  --- Factorial ---
+ *  - (number)!:    putting the character '!' takes the factorial of the number
+ *  --- Temperature ---
+ *  - (number)C->K: putting the word "C->K" converts the number from Celsius to Kelvin
+ *  - (number)C->F: putting the word "C->F" converts the number from Celsius to Fahrenheit
+ *  - (number)C->R: putting the word "C->R" converts the number from Celsius to Rankine
+ *  - (number)F->C: putting the word "F->C" converts the number from Fahrenheit to Celsius
+ *  - (number)F->K: putting the word "F->K" converts the number from Fahrenheit to Kelvin
+ *  - (number)F->R: putting the word "F->R" converts the number from Fahrenheit to Rankine
+ *  - (number)K->C: putting the word "K->C" converts the number from Kelvin to Celsius
+ *  - (number)K->F: putting the word "K->F" converts the number from Kelvin to Fahrenheit
+ *  - (number)K->R: putting the word "K->R" converts the number from Kelvin to Rankine
+ *  - (number)R->C: putting the word "R->C" converts the number from Rankine to Celsius
+ *  - (number)R->K: putting the word "R->K" converts the number from Rankine to Kelvin
+ *  - (number)R->F: putting the word "R->F" converts the number from Rankine to Fahrenheit
  */
 
 /* --- Imports --- */
@@ -53,6 +68,8 @@
  * since 2.45*2 is not a number so the nearest correct thing is 2.45. Moreover, a temp
  * string is used to chop off the already stored values so that strtof() function can
  * now store that other 2.00 in "2.45*2".
+ * 
+ * This function also handles unit conversions.
  * 
  * Parameters:
  *  - char *str: This is the string containing the mathematical expression
@@ -87,6 +104,78 @@ static float getNumber(char *str, int *index) {
 
         number = tgamma(number+1);
         i++;
+    
+    // Celsius to Kelvin 
+    } else if (temp[0] == 'C' && temp[1] == '-' && temp[2] == '>' && temp[3] == 'K') {
+
+        number = number + 273.15;
+        i += 4;
+
+    // Kelvin to Celsius
+    } else if (temp[0] == 'K' && temp[1] == '-' && temp[2] == '>' && temp[3] == 'C') {
+
+        number = number - 273.15;
+        i += 4;
+
+    // Celsius to Fahrenheite
+    } else if (temp[0] == 'C' && temp[1] == '-' && temp[2] == '>' && temp[3] == 'F') {
+
+        number = (number * 9/5) + 32;
+        i += 4;
+
+    // Fahrenheite to Celsius
+    } else if (temp[0] == 'F' && temp[1] == '-' && temp[2] == '>' && temp[3] == 'C') {
+
+        number = (number - 32) * 5/9;
+        i += 4;
+
+    // Celsius to Rankine
+    } else if (temp[0] == 'C' && temp[1] == '-' && temp[2] == '>' && temp[3] == 'R') {
+
+        number = (number * 9/5) + 491.67;
+        i += 4;
+
+    // Rankine to Celsius
+    } else if (temp[0] == 'R' && temp[1] == '-' && temp[2] == '>' && temp[3] == 'C') {
+
+        number = (number - 491.67) * 5/9;
+        i += 4;
+
+    // Kelvin to Fahrenheit
+    } else if (temp[0] == 'K' && temp[1] == '-' && temp[2] == '>' && temp[3] == 'F') {
+
+        number = ((number - 273.15) * 9/5) + 32;
+        i += 4;
+
+    // Fahrenheit to Kelvin
+    } else if (temp[0] == 'F' && temp[1] == '-' && temp[2] == '>' && temp[3] == 'K') {
+
+        number = ((number - 32) * 5/9) + 273.15;
+        i += 4;
+
+    // Kelvin to Rankine
+    } else if (temp[0] == 'K' && temp[1] == '-' && temp[2] == '>' && temp[3] == 'R') {
+
+        number = number * 9/5;
+        i += 4;
+
+    // Rankine to Kelvin
+    } else if (temp[0] == 'R' && temp[1] == '-' && temp[2] == '>' && temp[3] == 'K') {
+
+        number = number * 5/9;
+        i += 4;
+
+    // Fahrenheit to Rankine
+    } else if (temp[0] == 'F' && temp[1] == '-' && temp[2] == '>' && temp[3] == 'R') {
+
+        number = number + 459.67;
+        i += 4;
+
+    // Rankine to Fahrenheit
+    } else if (temp[0] == 'R' && temp[1] == '-' && temp[2] == '>' && temp[3] == 'F') {
+
+        number = number - 459.67;
+        i += 4;
 
     // Fail Safe for wrong input
     } else if (!isdigit(temp[0]) && temp[0] != '^' && temp[0] != '*' && temp[0] != '_' && temp[0] != '/' && temp[0] != '%' && temp[0] != '+' && temp[0] != '-' && temp[0] != ')' && temp[0] != '}' && temp[0] != ']' && temp[0] != '(' && temp[0] != '{' && temp[0] != '[' && temp[0] != '\0' ) {
