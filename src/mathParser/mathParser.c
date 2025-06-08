@@ -56,61 +56,55 @@ double textCalc(const char *input_expr) {
 }
 /* --- End of textCalc() --- */
 
-#define MAX_OUTPUT_LENGTH 64 // Enough for a double in scientific notation
 
-/* --- textCalcString() --- */
+#define MAX_OUTPUT_LENGTH 128  // Updated for larger outputs
+
+/**
+ * @brief Evaluates the input expression and returns result as a clean scientific string.
+ * 
+ * @param input_expr  Input mathematical expression string.
+ * @param output_buffer  Buffer to store the result string.
+ * @param buffer_size  Size of the output buffer.
+ * @return Pointer to the output_buffer containing the formatted result.
+ */
 char* textCalcString(const char *input_expr, char *output_buffer, size_t buffer_size) {
-
-    /* --- Input Buffer --- */
     char expr[512];
     strncpy(expr, input_expr, sizeof(expr) - 1);
-    expr[sizeof(expr) - 1] = '\0'; // Ensure null-termination
-    /* -------------------- */
+    expr[sizeof(expr) - 1] = '\0';
 
-    /* --- Pre-processing: Remove Spaces --- */
     removeSpace(expr);
-    /* ------------------------------------- */
 
-    /* --- Token Arrays --- */
     Token infixTokens[MAX_TOKENS];
     Token postfixTokens[MAX_TOKENS];
     tokenize(expr, infixTokens);
-    /* -------------------- */
-
-    /* --- Shunting-Yard: Infix → Postfix --- */
     shuntingYard(infixTokens, postfixTokens);
-    /* ------------------------------------- */
 
-    /* --- Evaluate Postfix Expression --- */
     double result = evaluatePostfix(postfixTokens);
-    /* ------------------------------------ */
 
-    /* --- Format Result to Scientific Notation --- */
-    char temp_buffer[MAX_OUTPUT_LENGTH];
-    snprintf(temp_buffer, sizeof(temp_buffer), "%.10e", result);
-    /* --------------------------------------------- */
+    // Format to scientific notation with high precision
+    char temp_buffer[128];
+    snprintf(temp_buffer, sizeof(temp_buffer), "%.15e", result); // 15 decimal digits
 
-    /* --- Intelligent Trimming of Zeros --- */
-    char *e_ptr = strchr(temp_buffer, 'e'); // Find where 'e' starts
+    // Find 'e'
+    char *e_ptr = strchr(temp_buffer, 'e');
     if (e_ptr) {
         char *dot_ptr = strchr(temp_buffer, '.');
         if (dot_ptr) {
-            char *end_ptr = e_ptr - 1; // Move left before 'e'
-            // Remove trailing zeros
-            while (end_ptr > dot_ptr && *end_ptr == '0') {
-                *end_ptr = '\0';
-                end_ptr--;
+            char *last_nonzero = e_ptr - 1;
+            while (last_nonzero > dot_ptr && *last_nonzero == '0') {
+                last_nonzero--;
             }
-            // If dot is last, remove dot too
-            if (end_ptr == dot_ptr) {
-                *end_ptr = '\0';
+            // Only modify before 'e'
+            if (last_nonzero == dot_ptr) {
+                // Only '.' left, remove it too
+                memmove(dot_ptr, e_ptr, strlen(e_ptr) + 1);
+            } else {
+                // Move everything after last nonzero to 'e'
+                memmove(last_nonzero + 1, e_ptr, strlen(e_ptr) + 1);
             }
         }
     }
 
-    // Now copy cleaned-up string to output_buffer
     snprintf(output_buffer, buffer_size, "%s", temp_buffer);
-    /* --------------------------------------------- */
-
     return output_buffer;
 }
